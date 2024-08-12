@@ -21,7 +21,7 @@ class CustomerResource extends JsonResource
             'email' => $this->email,
             'address' => $this->address,
             'city' => $this->city,
-            'postCode' => $this->post_code,
-        ]; 
+            'postalCode' => $this->postal_code,
+        ];
     }
 }
