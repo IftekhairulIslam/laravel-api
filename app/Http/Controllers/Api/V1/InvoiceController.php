@@ -19,14 +19,17 @@ class InvoiceController extends Controller
     public function index(Request $request)
     {
         $filter = new InvoicesFilter();
-        $queryItems = $filter->transform($request); // [['column', 'operator', 'value']];
+        $filterItems = $filter->transform($request); // [['column', 'operator', 'value']];
+        
+        $invoices = Invoice::where($filterItems);
 
-        if (count($queryItems) == 0) {
-            return new InvoiceCollection(Invoice::paginate());
-        } else {
-            $invoices = Invoice::where($queryItems)->paginate();
-            return new InvoiceCollection($invoices->appends($request->query()));
+        // Add customer if requested
+        $includeCustomer = $request->query("includeCustomer");
+        if ($includeCustomer) {
+            $invoices->with("customer");
         }
+
+        return new InvoiceCollection($invoices->paginate()->appends($request->query()));
     }
 
     /**
